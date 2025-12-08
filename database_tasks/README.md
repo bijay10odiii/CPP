@@ -19,4 +19,6 @@ The database consists of the following tables:
 | `Credits` | Grades and credits earned for a course |
 
 #er
+
+
 Student → Credits → Course → Assignment → Task → Completion → Student
