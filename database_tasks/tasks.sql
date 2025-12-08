@@ -49,16 +49,16 @@
 --   FOREIGN KEY (course_id) REFERENCES Course(course_id)
 -- );
 
---INSERTING SAMPLE VALUES
+-- INSERTING SAMPLE VALUES
 
---COURSE TABLE
+-- COURSE TABLE
 -- INSERT INTO Course (course_id, course_name, course_description)
 -- VALUES
 -- (1, 'Database Systems', 'Learn SQL and data modeling'),
 -- (2, 'Web Development', 'Build backend and frontend applications'),
 -- (3, 'IoT Fundamentals', 'Work with sensors and microcontrollers');
 
---STUDENT TABLE
+-- STUDENT TABLE
 -- INSERT INTO Student (student_id, student_name, major)
 -- VALUES
 -- (1, 'Alice Johnson', 'Software Engineering'),
@@ -66,7 +66,7 @@
 -- (3, 'Carla Brown', 'Computer Science'),
 -- (4, 'David Wilson', 'Electronics');
 
---ASSIGNMENT TABLE
+-- ASSIGNMENT TABLE
 -- INSERT INTO Assignment (assignment_id, assignment_name, course_id)
 -- VALUES
 -- (1, 'SQL Basics', 1),
@@ -75,7 +75,7 @@
 -- (4, 'Sensor Data API', 3);
 
 
---TASK TABLE
+-- TASK TABLE
 -- INSERT INTO Task (task_id, task_name, assignment_id)
 -- VALUES
 -- (1, 'Create Tables', 1),
@@ -86,7 +86,7 @@
 -- (6, 'API Sensor POST Request', 4),
 -- (7, 'API Sensor GET Request', 4);
 
---CREDIT TABLE
+-- CREDIT TABLE
 -- INSERT INTO Credits (credit_id, student_id, course_id, grade, credits)
 -- VALUES
 -- (1, 1, 1, 5, 5),
@@ -94,7 +94,7 @@
 -- (3, 3, 2, 4, 4),
 -- (4, 1, 3, 5, 6);
 
---COMPLETION TABLE
+-- COMPLETION TABLE
 
 -- INSERT INTO Completion (completion_id, student_id, task_id, completion_time)
 -- VALUES
@@ -105,3 +105,63 @@
 -- (5, 1, 6, '2024-12-30'),
 -- (6, 1, 7, '2024-12-31');
 
+-- --TASK 1 --List all assignments with their related tasks and courses
+
+-- SElECT Assignment.assignment_id, Task.task_id, Course.course_name
+-- FROM Task
+-- JOIN Assignment ON Task.assignment_id = Assignment.assignment_id
+-- JOIN Course ON Assignment.course_id = Course.course_id;
+
+--Task 2 — Show all completions with assignment details and task names
+
+-- SELECT Completion.completion_id, Completion.completion_time, Assignment.assignment_id, Task.task_name
+-- FROM Completion
+-- JOIN Task ON Completion.task_id = Task.task_id
+-- JOIN Assignment ON Task.assignment_id = Assignment.assignment_id;
+
+--Task3 -- List students with their courses and grades
+-- SELECT Student.student_name, Course.course_name, Credits.grade, Credits.credits
+-- FROM Credits
+-- JOIN Student ON Credits.student_id = Student.student_id
+-- JOIN Course ON Credits.course_id = Course.course_id;
+
+--TASK 4 -- Find all tasks completed by students
+-- SELECT Student.student_name, Task.task_name, Completion.completion_time
+-- FROM Completion
+-- JOIN Student ON Completion.student_id = Student.student_id
+-- JOIN Task ON Completion.task_id = Task.task_id;
+
+--Task 5 -- Show courses and the number of assignments in each
+-- SELECT Course.course_name, COUNT(Assignment.assignment_id) AS Total_assignments
+-- FROM Course
+-- LEFT JOIN Assignment ON Course.course_id = Assignment.course_id
+-- GROUP BY Course.course_id;
+
+--TASk 6 --Courses Without Assignments
+-- SELECT Course.course_name, Course.course_description
+-- FROM Course
+-- LEFT JOIN Assignment ON Course.course_id = Assignment.course_id
+-- WHERE Assignment.assignment_id IS NULL;
+
+--TASK 7 --Assignment Completed Late
+-- SELECT Assignment.assignment_id, Task.task_name, Completion.completion_time
+-- FROM Completion
+-- JOIN Task ON Completion.task_id = Task.task_id
+-- JOIN Assignment ON Task.assignment_id = Assignment.assignment_id
+-- WHERE Completion.completion_time > '2025-01-01';
+
+--Task 8 --Students Missing Credits
+-- SELECT Student.student_name, Student.major
+-- FROM Student
+-- LEFT JOIN Credits ON Student.student_id = Credits.student_id
+-- WHERE Credits.credit_id IS NULL;
+
+--Task 9 -- Course Performance Summary
+
+-- SELECT Course.course_name, 
+--         COUNT(Credits.student_id) AS total_students,
+--         AVG(credits.grade) AS average_grade,
+--         SUM(Credits.credits) AS total_credits
+-- FROM Course
+-- LEFT JOIN Credits ON Course.course_id = Credits.course_id
+-- GROUP BY Course.course_id;
